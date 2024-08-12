@@ -7,6 +7,7 @@ class CourseEntity {
   final String classroom;
   final String lecturerId;
   final List<String>? attendancesIds;
+  final List<String>? studentsIds;
   final int weeks;
 
   CourseEntity({
@@ -18,6 +19,7 @@ class CourseEntity {
     required this.classroom,
     required this.lecturerId,
     this.attendancesIds,
+    this.studentsIds,
     this.weeks = 14,
   });
 
@@ -41,6 +43,7 @@ class CourseEntity {
       'classroom': classroom,
       'lecturerId': lecturerId,
       'attendancesIds': attendancesIds,
+      'studentsIds': studentsIds,
       'weeks': weeks,
     };
   }
@@ -56,10 +59,8 @@ class CourseEntity {
       lecturerId: doc['lecturerId'] as String,
       attendancesIds:
           (doc['attendancesIds'] as List?)?.map((e) => e as String).toList(),
-      // attendances: (doc['attendances'] as List?)
-      //     ?.map((e) => Attendance.fromEntity(
-      //         AttendanceEntity.fromDocument(e as Map<String, Object?>)))
-      //     .toList(),
+      studentsIds:
+          (doc['studentsIds'] as List?)?.map((e) => e as String).toList(),
       weeks: doc['weeks'] as int,
     );
   }

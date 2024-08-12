@@ -22,23 +22,6 @@ class SplashScreen extends StatelessWidget {
           child: CircularProgressIndicator(),
         ),
       ),
-
-      //BlocBuilder<AuthenticationBloc, AuthenticationState>(
-      //   builder: (context, state) {
-      //     print('is the problem from here?');
-      //     if (state.status == AuthenticationStatus.authenticated) {
-      //       context.go('/home');
-      //       return Container();
-      //     } else if (state.status == AuthenticationStatus.unauthenticated) {
-      //       context.go('/login');
-      //       return Container();
-      //     } else {
-      //       return const Center(
-      //         child: CircularProgressIndicator(),
-      //       );
-      //     }
-      //   },
-      // ),
     );
   }
 }

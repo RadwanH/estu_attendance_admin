@@ -12,6 +12,7 @@ class Course {
   String classroom;
   String lecturerId;
   List<String>? attendancesIds;
+  List<String>? studentsIds;
   int weeks;
 
   Course({
@@ -23,6 +24,7 @@ class Course {
     required this.classroom,
     required this.lecturerId,
     this.attendancesIds,
+    this.studentsIds,
     this.weeks = 14,
   });
 
@@ -47,6 +49,7 @@ class Course {
       lecturerId: lecturerId,
       weeks: weeks,
       attendancesIds: attendancesIds,
+      
     );
   }
 
