@@ -21,7 +21,7 @@ class LecturerCourseCard extends StatelessWidget {
         onTap: () {},
         child: SizedBox(
           width: 200,
-          height: 300,
+          height: 340,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -1,7 +1,7 @@
 import 'package:course_repository/course_repository.dart';
-import 'package:estu_attendance_admin/features/courses/get_lecturer_courses/blocs/get_lecturer_courses_bloc/get_lecturer_courses_bloc.dart';
+import 'package:estu_attendance_admin/features/courses/blocs/get_lecturer_courses_bloc/get_lecturer_courses_bloc.dart';
 
-import 'package:estu_attendance_admin/features/courses/get_lecturer_courses/views/lecturer_courses_grid.dart';
+import 'package:estu_attendance_admin/features/courses/views/lecturer_courses_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 800),
@@ -66,7 +66,7 @@ class HomeScreen extends StatelessWidget {
                   fit: FlexFit.tight,
                   child: Container(
                     decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(20)),
                     child: BlocProvider(
                       create: (context) =>
