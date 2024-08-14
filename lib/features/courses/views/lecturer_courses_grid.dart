@@ -50,21 +50,35 @@ class CourseGrid extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: courses.isNotEmpty
-                ? Wrap(
-                    spacing: 40,
-                    runSpacing: 40,
-                    children: courses
-                        .map(
-                          (course) => LecturerCourseCard(course: course),
-                        )
-                        .toList(),
-                  )
-                : const Center(
-                    child: Text('No courses found...'),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                child: const Text(
+                  'Your Courses',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
                   ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: courses.isNotEmpty
+                    ? Wrap(
+                        spacing: 40,
+                        runSpacing: 40,
+                        children: courses
+                            .map(
+                              (course) => LecturerCourseCard(course: course),
+                            )
+                            .toList(),
+                      )
+                    : const Center(
+                        child: Text('No courses found...'),
+                      ),
+              ),
+            ],
           ),
         ),
       ),

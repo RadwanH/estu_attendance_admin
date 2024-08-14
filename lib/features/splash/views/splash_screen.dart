@@ -1,3 +1,4 @@
+import 'package:course_repository/course_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -13,7 +14,7 @@ class SplashScreen extends StatelessWidget {
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
           if (state.status == AuthenticationStatus.authenticated) {
-            context.go('/attendance/open-attendance');
+            context.go('/home');
           } else if (state.status == AuthenticationStatus.unauthenticated) {
             context.go('/login');
           }

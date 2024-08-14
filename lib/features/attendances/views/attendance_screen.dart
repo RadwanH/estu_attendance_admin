@@ -1,10 +1,12 @@
-import 'package:estu_attendance_admin/features/attendances/views/open_attendance_screen.dart';
+import 'package:course_repository/course_repository.dart';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
-class AttendanceScreen extends StatelessWidget {
-  const AttendanceScreen({super.key});
+class AttendancesScreen extends StatelessWidget {
+  final Course? course;
+  const AttendancesScreen({super.key, required this.course});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,8 @@ class AttendanceScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     child: InkWell(
                       onTap: () {
-                        context.go('/attendance/open-attendance');
+                        context.go('/attendance/create-attendance',
+                            extra: course);
                       },
                       borderRadius: BorderRadius.circular(20),
                       child: const SizedBox(
@@ -79,6 +82,5 @@ class AttendanceScreen extends StatelessWidget {
         ),
       ),
     );
-    ;
   }
 }

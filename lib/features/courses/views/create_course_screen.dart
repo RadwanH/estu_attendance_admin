@@ -1,7 +1,7 @@
 import 'package:course_repository/course_repository.dart';
 import 'package:estu_attendance_admin/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:estu_attendance_admin/components/my_macro_widget_field.dart';
-import 'package:estu_attendance_admin/features/courses/blocs/create_coourse_cubit/create_course_cubit.dart';
+import 'package:estu_attendance_admin/features/courses/blocs/create_course_cubit/create_course_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -79,11 +79,7 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
         BlocListener<CreateCourseCubit, CreateCourseState>(
           listener: (context, state) {
             if (state is CreateCourseLoading) {
-              // setState(() {
-              //   creationRequired = true;
-              // });
-
-              print('You are in the listener and state is : $state');
+             
               const CircularProgressIndicator();
             } else if (state is CreateCourseSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(

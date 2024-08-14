@@ -2,16 +2,24 @@ import 'package:course_repository/course_repository.dart';
 import 'package:estu_attendance_admin/components/my_mini_text_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../components/my_macro_widget.dart';
 import '../../../components/my_macro_widget_field.dart';
 
 class LecturerCourseDetailsScreen extends StatelessWidget {
-  final Course course;
+  final Course? course;
   const LecturerCourseDetailsScreen({super.key, required this.course});
 
   @override
   Widget build(BuildContext context) {
+    if (course == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text('Course data is not available.'),
+        ),
+      );
+    }
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Center(
@@ -29,7 +37,7 @@ class LecturerCourseDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                course.imageUrl.isEmpty
+                course!.imageUrl.isEmpty
                     ? SizedBox(
                         width: 400,
                         child: CircleAvatar(
@@ -55,7 +63,7 @@ class LecturerCourseDetailsScreen extends StatelessWidget {
                               Theme.of(context).colorScheme.onPrimary,
                           radius: 100,
                           backgroundImage: NetworkImage(
-                            course.imageUrl,
+                            course!.imageUrl,
                             scale: 1,
                           ),
                         ),
@@ -75,7 +83,7 @@ class LecturerCourseDetailsScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
-                          course.name,
+                          course!.name,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 20,
@@ -91,13 +99,13 @@ class LecturerCourseDetailsScreen extends StatelessWidget {
                         children: [
                           MyMiniTextCard(
                               title: 'Code',
-                              value: course.code,
+                              value: course!.code,
                               icon: FontAwesomeIcons.hashtag,
                               iconColor: Colors.lightBlue),
                           const SizedBox(width: 10),
                           MyMiniTextCard(
                               title: 'Classroom',
-                              value: course.classroom,
+                              value: course!.classroom,
                               icon: FontAwesomeIcons.landmark,
                               iconColor: Colors.lightGreen),
                         ],
@@ -110,13 +118,13 @@ class LecturerCourseDetailsScreen extends StatelessWidget {
                         children: [
                           MyMiniTextCard(
                               title: 'Weeks',
-                              value: course.weeks.toString(),
+                              value: course!.weeks.toString(),
                               icon: FontAwesomeIcons.calendarWeek,
                               iconColor: Colors.tealAccent),
                           const SizedBox(width: 10),
                           MyMiniTextCard(
                               title: 'H/W',
-                              value: course.hours.toString(),
+                              value: course!.hours.toString(),
                               icon: FontAwesomeIcons.clock,
                               iconColor: Colors.orangeAccent),
                         ],
@@ -130,14 +138,14 @@ class LecturerCourseDetailsScreen extends StatelessWidget {
                           MyMiniTextCard(
                               title: 'Students',
                               value:
-                                  '${course.studentsIds == null ? 0 : course.studentsIds!.length}',
+                                  '${course!.studentsIds == null ? 0 : course!.studentsIds!.length}',
                               icon: FontAwesomeIcons.users,
                               iconColor: Colors.deepPurple),
                           const SizedBox(width: 10),
                           MyMiniTextCard(
                               title: 'Attendances',
                               value:
-                                  ' ${course.attendancesIds == null ? 0 : course.attendancesIds!.length}',
+                                  ' ${course!.attendancesIds == null ? 0 : course!.attendancesIds!.length}',
                               icon: FontAwesomeIcons.calendar,
                               iconColor: Colors.deepOrange),
                         ],
@@ -157,7 +165,9 @@ class LecturerCourseDetailsScreen extends StatelessWidget {
                       elevation: 3,
                       borderRadius: BorderRadius.circular(10),
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          context.go('/attendance', extra: course!);
+                        },
                         child: Ink(
                           width: 400,
                           padding: const EdgeInsets.all(8),

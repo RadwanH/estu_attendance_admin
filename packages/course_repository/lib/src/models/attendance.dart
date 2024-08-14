@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:user_repository/user_repository.dart';
 import 'package:uuid/uuid.dart';
 
@@ -31,6 +32,7 @@ class Attendance {
     week: 0,
     date: DateTime.now(),
     timer: 0,
+    attendeesIds: [],
     forHours: [],
   );
 
@@ -58,5 +60,40 @@ class Attendance {
       attendeesIds: entity.attendeesIds,
       forHours: [],
     );
+  }
+
+  Attendance copyWith({
+    String? id,
+    String? lecturerId,
+    String? courseId,
+    int? week,
+    DateTime? date,
+    int? timer,
+    List<String>? attendeesIds,
+    List<int>? forHours,
+  }) {
+    return Attendance(
+      id: id ?? this.id,
+      lecturerId: lecturerId ?? this.lecturerId,
+      courseId: courseId ?? this.courseId,
+      week: week ?? this.week,
+      date: date ?? this.date,
+      timer: timer ?? this.timer,
+      attendeesIds: attendeesIds ?? this.attendeesIds,
+      forHours: forHours ?? this.forHours,
+    );
+  }
+
+  @override
+  String toString() {
+    return '''Attendance(
+    id: $id, 
+    lecturerId: $lecturerId, 
+    courseId: $courseId, 
+    week: $week, 
+    date: $date, 
+    timer: $timer, 
+    attendeesIds: $attendeesIds, 
+    forHours: $forHours)''';
   }
 }

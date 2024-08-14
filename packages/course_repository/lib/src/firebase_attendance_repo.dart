@@ -68,4 +68,20 @@ class FirebaseAttendanceRepo implements AttendanceRepo {
       rethrow;
     }
   }
+
+  @override
+  Future<List<Attendance>> getCourseAttendances(String courseId) {
+    try {
+      return attendanceCollection
+          .where('courseId', isEqualTo: courseId)
+          .get()
+          .then((snapshot) => snapshot.docs
+              .map((doc) => Attendance.fromEntity(
+                  AttendanceEntity.fromDocument(doc.data())))
+              .toList());
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }
