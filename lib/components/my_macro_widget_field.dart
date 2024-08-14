@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class MyMacroWidget extends StatelessWidget {
+class MyMacroWidgetField extends StatelessWidget {
   final String title;
-  final String value;
   final IconData icon;
   final Color? iconColor;
+  final TextEditingController controller;
   final Color? color;
+  final List<TextInputFormatter>? inputFormatters;
+  final String? Function(String?)? validator;
 
-  const MyMacroWidget(
+  const MyMacroWidgetField(
       {required this.title,
       required this.icon,
-      required this.value,
       this.iconColor,
+      required this.controller,
       this.color,
+      this.inputFormatters,
+      this.validator,
       super.key});
 
   @override
@@ -43,11 +47,19 @@ class MyMacroWidget extends StatelessWidget {
               size: 40,
             ),
             const SizedBox(height: 4),
-            Text(
-              value,
+            TextFormField(
+              validator: validator,
+              inputFormatters: inputFormatters,
+              keyboardType: TextInputType.number,
+              controller: controller,
+              textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+              ),
+              decoration: const InputDecoration(
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(vertical: 8),
               ),
             ),
             const SizedBox(height: 8),

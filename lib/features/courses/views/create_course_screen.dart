@@ -1,6 +1,6 @@
 import 'package:course_repository/course_repository.dart';
 import 'package:estu_attendance_admin/blocs/authentication_bloc/authentication_bloc.dart';
-import 'package:estu_attendance_admin/components/my_macro_widget.dart';
+import 'package:estu_attendance_admin/components/my_macro_widget_field.dart';
 import 'package:estu_attendance_admin/features/courses/blocs/create_coourse_cubit/create_course_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -214,7 +214,7 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
                             width: 400,
                             child: Row(
                               children: [
-                                MyMacroWidget(
+                                MyMacroWidgetField(
                                   title: 'Course Code',
                                   icon: FontAwesomeIcons.hashtag,
                                   iconColor: Colors.lightBlue,
@@ -227,7 +227,7 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
                                   },
                                 ),
                                 const SizedBox(width: 10),
-                                MyMacroWidget(
+                                MyMacroWidgetField(
                                   title: 'Classroom',
                                   icon: FontAwesomeIcons.landmark,
                                   iconColor: Colors.lightGreen,
@@ -247,7 +247,7 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
                             width: 400,
                             child: Row(
                               children: [
-                                MyMacroWidget(
+                                MyMacroWidgetField(
                                   title: 'Weeks',
                                   icon: FontAwesomeIcons.calendarWeek,
                                   iconColor: Colors.tealAccent,
@@ -263,7 +263,7 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
                                   },
                                 ),
                                 const SizedBox(width: 10),
-                                MyMacroWidget(
+                                MyMacroWidgetField(
                                   title: 'Hours per Week',
                                   icon: FontAwesomeIcons.clock,
                                   iconColor: Colors.orangeAccent,

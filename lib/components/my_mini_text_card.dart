@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class MyMacroWidget extends StatelessWidget {
+class MyMiniTextCard extends StatelessWidget {
   final String title;
   final String value;
-  final IconData icon;
+  final IconData? icon;
   final Color? iconColor;
   final Color? color;
 
-  const MyMacroWidget(
+  const MyMiniTextCard(
       {required this.title,
-      required this.icon,
+      this.icon,
       required this.value,
       this.iconColor,
       this.color,
@@ -33,28 +33,33 @@ class MyMacroWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 8.0,
-          vertical: 16,
+          vertical: 14,
         ),
-        child: Column(
+        child: Row(
           children: [
-            FaIcon(
-              icon,
-              color: iconColor,
-              size: 40,
-            ),
-            const SizedBox(height: 4),
+            icon != null
+                ? FaIcon(
+                    icon,
+                    color: iconColor,
+                    size: 20,
+                  )
+                : const SizedBox(),
+            const SizedBox(width: 8),
             Text(
-              value,
+              '$title :',
               style: const TextStyle(
-                fontSize: 20,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(width: 4),
             Text(
-              title,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            )
+              value,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ],
         ),
       ),

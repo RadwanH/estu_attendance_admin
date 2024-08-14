@@ -1,4 +1,5 @@
 import 'package:user_repository/user_repository.dart';
+import 'package:uuid/uuid.dart';
 
 import '../entities/entities.dart';
 
@@ -9,7 +10,6 @@ class Attendance {
   final int week;
   final DateTime? date;
   final int timer;
-  final String generatedCode;
   final List<String>? attendeesIds;
   final List<int> forHours;
 
@@ -20,20 +20,17 @@ class Attendance {
     required this.week,
     DateTime? date,
     required this.timer,
-    required this.generatedCode,
     this.attendeesIds,
     required this.forHours,
   }) : this.date = date ?? DateTime.now();
 
   static final empty = Attendance(
-    id: '',
+    id: const Uuid().v1(),
     lecturerId: '',
     courseId: '',
     week: 0,
     date: DateTime.now(),
     timer: 0,
-    generatedCode: '',
-    attendeesIds: [],
     forHours: [],
   );
 
@@ -45,7 +42,6 @@ class Attendance {
       week: week,
       date: date,
       timer: timer,
-      generatedCode: generatedCode,
       attendeesIds: attendeesIds!,
       forHours: [],
     );
@@ -59,7 +55,6 @@ class Attendance {
       week: entity.week,
       date: entity.date,
       timer: entity.timer,
-      generatedCode: entity.generatedCode,
       attendeesIds: entity.attendeesIds,
       forHours: [],
     );

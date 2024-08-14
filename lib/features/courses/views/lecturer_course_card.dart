@@ -1,6 +1,7 @@
 import 'package:course_repository/course_repository.dart';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LecturerCourseCard extends StatelessWidget {
   const LecturerCourseCard({
@@ -18,7 +19,9 @@ class LecturerCourseCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        onTap: () {},
+        onTap: () {
+          context.go('/course_details', extra: course);
+        },
         child: SizedBox(
           width: 200,
           height: 340,
@@ -37,7 +40,7 @@ class LecturerCourseCard extends StatelessWidget {
                       ? ColorFiltered(
                           colorFilter: const ColorFilter.mode(
                             Colors.grey,
-                            BlendMode.saturation,
+                            BlendMode.srcIn,
                           ),
                           child: Image.asset(
                             'assets/images/estu_logo.png',

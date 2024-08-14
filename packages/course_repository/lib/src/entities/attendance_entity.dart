@@ -7,8 +7,7 @@ class AttendanceEntity {
   final int week;
   final DateTime? date;
   final int timer;
-  final String generatedCode;
-  final List<String> attendeesIds;
+  final List<String>? attendeesIds;
   final List<int> forHours;
 
   AttendanceEntity({
@@ -18,8 +17,7 @@ class AttendanceEntity {
     required this.week,
     DateTime? date,
     required this.timer,
-    required this.generatedCode,
-    required this.attendeesIds,
+    this.attendeesIds,
     required this.forHours,
   }) : this.date = date ?? DateTime.now();
 
@@ -30,8 +28,6 @@ class AttendanceEntity {
     week: 0,
     date: DateTime.now(),
     timer: 0,
-    generatedCode: '',
-    attendeesIds: [],
     forHours: [],
   );
 
@@ -43,7 +39,6 @@ class AttendanceEntity {
       'week': week,
       'date': date,
       'timer': timer,
-      'generatedCode': generatedCode,
       'attendeesIds': attendeesIds,
       'forHours': forHours,
     };
@@ -57,7 +52,6 @@ class AttendanceEntity {
       week: doc['week'] as int,
       date: doc['date'] as DateTime,
       timer: doc['timer'] as int,
-      generatedCode: doc['generatedCode'] as String,
       attendeesIds: doc['attendeesIds'] as List<String>,
       forHours: doc['forHours'] as List<int>,
     );
