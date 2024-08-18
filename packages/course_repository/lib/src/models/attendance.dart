@@ -45,7 +45,7 @@ class Attendance {
       date: date,
       timer: timer,
       attendeesIds: attendeesIds!,
-      forHours: [],
+      forHours: forHours,
     );
   }
 
@@ -58,7 +58,7 @@ class Attendance {
       date: entity.date,
       timer: entity.timer,
       attendeesIds: entity.attendeesIds,
-      forHours: [],
+      forHours: entity.forHours,
     );
   }
 

@@ -1,5 +1,5 @@
 import 'package:course_repository/course_repository.dart';
-import 'package:estu_attendance_admin/features/attendances/blocs/cubit/create_attendance_cubit.dart';
+import '../blocs/create_attendance_cubit/create_attendance_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -57,7 +57,9 @@ class _OpenAttendanceScreenState extends State<OpenAttendanceScreen> {
             ),
           );
           Future.delayed(const Duration(seconds: 1), () {
-            context.go('/attendance');
+            context.go('/attendance', extra: widget.course);
+            print(
+                'Navigating to /attendance for course ${widget.course.toString()} ');
           });
         } else if (state is CreateAttendanceFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -67,6 +69,8 @@ class _OpenAttendanceScreenState extends State<OpenAttendanceScreen> {
               duration: const Duration(seconds: 2),
             ),
           );
+        } else {
+          context.go('/attendance', extra: widget.course);
         }
       },
       child: Scaffold(
@@ -88,13 +92,24 @@ class _OpenAttendanceScreenState extends State<OpenAttendanceScreen> {
                     color: Theme.of(context).colorScheme.onPrimary,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Text(
-                    'Open an Attendance',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          context.go('/attendance', extra: widget.course);
+                        },
+                        icon: const FaIcon(FontAwesomeIcons.arrowLeft),
+                      ),
+                      const SizedBox(width: 16),
+                      const Text(
+                        'Open an Attendance',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

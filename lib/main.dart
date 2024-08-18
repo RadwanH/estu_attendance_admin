@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:estu_attendance_admin/app.dart';
-import 'package:estu_attendance_admin/firebase_options.dart';
+import 'app.dart';
+import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

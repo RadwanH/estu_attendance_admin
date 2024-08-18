@@ -1,17 +1,18 @@
 import 'package:course_repository/course_repository.dart';
-import 'package:estu_attendance_admin/blocs/authentication_bloc/authentication_bloc.dart';
-import 'package:estu_attendance_admin/features/attendances/blocs/cubit/create_attendance_cubit.dart';
-import 'package:estu_attendance_admin/features/attendances/views/attendance_screen.dart';
-import 'package:estu_attendance_admin/features/attendances/views/create_attendance_screen.dart';
-import 'package:estu_attendance_admin/features/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
-import 'package:estu_attendance_admin/features/auth/views/sign_in_screen.dart';
-import 'package:estu_attendance_admin/features/courses/blocs/create_course_cubit/create_course_cubit.dart';
-import 'package:estu_attendance_admin/features/courses/blocs/upload_picture_bloc/upload_picture_bloc.dart';
-import 'package:estu_attendance_admin/features/courses/views/lecturer_course_details_screen.dart';
+import '../../blocs/authentication_bloc/authentication_bloc.dart';
+import '../attendances/blocs/create_attendance_cubit/create_attendance_cubit.dart';
+import '../attendances/views/attendance_screen.dart';
+import '../attendances/views/create_attendance_screen.dart';
+import '../auth/blocs/sign_in_bloc/sign_in_bloc.dart';
+import '../auth/views/sign_in_screen.dart';
+import '../courses/blocs/create_course_cubit/create_course_cubit.dart';
+import '../courses/blocs/upload_picture_bloc/upload_picture_bloc.dart';
+import '../courses/views/lecturer_course_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../attendances/blocs/get_attendances_bloc/get_attendances_bloc.dart';
 import '../base/views/base_screen.dart';
 import '../courses/views/create_course_screen.dart';
 import '../home/views/home_screen.dart';
@@ -104,8 +105,19 @@ GoRouter router(AuthenticationBloc authenticationBloc) {
             path: '/attendance',
             builder: (context, state) {
               final course = state.extra as Course?;
-              return BlocProvider.value(
-                value: context.read<AuthenticationBloc>(),
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider.value(
+                    value: context.read<AuthenticationBloc>(),
+                  ),
+                  BlocProvider(
+                    create: (context) =>
+                        GetAttendancesBloc(FirebaseAttendanceRepo())
+                          ..add(
+                            GetAttendances(courseId: course!.courseId),
+                          ),
+                  )
+                ],
                 child: AttendancesScreen(
                   course: course,
                 ),

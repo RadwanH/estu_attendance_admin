@@ -1,7 +1,7 @@
 import 'package:course_repository/course_repository.dart';
-import 'package:estu_attendance_admin/features/courses/blocs/get_lecturer_courses_bloc/get_lecturer_courses_bloc.dart';
+import '../blocs/get_lecturer_courses_bloc/get_lecturer_courses_bloc.dart';
 
-import 'package:estu_attendance_admin/features/courses/views/lecturer_course_card.dart';
+import 'lecturer_course_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,5 +1,5 @@
 import 'package:course_repository/course_repository.dart';
-import 'package:estu_attendance_admin/components/my_mini_text_card.dart';
+import '../../../components/my_mini_text_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';

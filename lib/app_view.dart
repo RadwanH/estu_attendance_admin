@@ -1,4 +1,4 @@
-import 'package:estu_attendance_admin/features/router/router.dart';
+import 'features/router/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

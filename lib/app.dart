@@ -1,4 +1,4 @@
-import 'package:estu_attendance_admin/app_view.dart';
+import 'app_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:user_repository/user_repository.dart';

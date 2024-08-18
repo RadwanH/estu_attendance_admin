@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:user_repository/user_repository.dart';
 
 class AttendanceEntity {
@@ -50,10 +51,15 @@ class AttendanceEntity {
       lecturerId: doc['lecturerId'] as String,
       courseId: doc['courseId'] as String,
       week: doc['week'] as int,
-      date: doc['date'] as DateTime,
+      date: doc['date'] != null ? (doc['date'] as Timestamp).toDate() : null,
       timer: doc['timer'] as int,
-      attendeesIds: doc['attendeesIds'] as List<String>,
-      forHours: doc['forHours'] as List<int>,
+      attendeesIds: (doc['attendeesIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
+      forHours:
+          (doc['forHours'] as List<dynamic>?)?.map((e) => e as int).toList() ??
+              [],
     );
   }
 }

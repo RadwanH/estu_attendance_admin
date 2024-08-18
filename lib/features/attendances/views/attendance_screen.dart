@@ -1,8 +1,12 @@
 import 'package:course_repository/course_repository.dart';
+import '../blocs/get_attendances_bloc/get_attendances_bloc.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+
+import 'attendances_grid.dart';
 
 class AttendancesScreen extends StatelessWidget {
   final Course? course;
@@ -63,17 +67,35 @@ class AttendancesScreen extends StatelessWidget {
                   fit: FlexFit.tight,
                   child: Container(
                     decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surface,
-                        borderRadius: BorderRadius.circular(20)),
-                    // child: BlocProvider(
-                    //   create: (context) =>
-                    //       GetLecturerCoursesBloc(FirebaseCourseRepo())
-                    //         ..add(GetLecturerCourses(context
-                    //             .read<AuthenticationBloc>()
-                    //             .state
-                    //             .user!
-                    //             .userId)),
-                    //   child: const LecturerCoursesGrid(),
+                      color: Theme.of(context).colorScheme.surface,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: BlocBuilder<GetAttendancesBloc, GetAttendancesState>(
+                      builder: (context, state) {
+                        if (state is GetAttendancesSuccess) {
+                          if (state.attendances.isEmpty) {
+                            return const Center(
+                              child: Text('No Attendances found...'),
+                            );
+                          }
+                          return AttendancesGrid(
+                              attendances: state.attendances);
+                        } else if (state is GetAttendancesLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (state is GetAttendancesFailure) {
+                          return Center(
+                            child: Text('Error: ${state.message}'),
+                          );
+                        } else {
+                          return const Center(
+                            child: Text(
+                                'An error has occurred while loading attendances...'),
+                          );
+                        }
+                      },
+                    ),
                   ),
                 ),
               ],

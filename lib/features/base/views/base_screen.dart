@@ -58,19 +58,6 @@ class _BaseScreenState extends State<BaseScreen> {
                         const SizedBox(
                           width: 30,
                         ),
-                        InkWell(
-                          onTap: () {
-                            context.go('/create_course');
-                          },
-                          child: const Text(
-                            'Create Course',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              // fontSize: 20.0,
-                              // fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                     Padding(

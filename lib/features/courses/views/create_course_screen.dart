@@ -1,7 +1,7 @@
 import 'package:course_repository/course_repository.dart';
-import 'package:estu_attendance_admin/blocs/authentication_bloc/authentication_bloc.dart';
-import 'package:estu_attendance_admin/components/my_macro_widget_field.dart';
-import 'package:estu_attendance_admin/features/courses/blocs/create_course_cubit/create_course_cubit.dart';
+import '../../../blocs/authentication_bloc/authentication_bloc.dart';
+import '../../../components/my_macro_widget_field.dart';
+import '../blocs/create_course_cubit/create_course_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
