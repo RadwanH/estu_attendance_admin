@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../../../components/my_text_feild.dart';
 import '../blocs/upload_picture_bloc/upload_picture_bloc.dart';
 
@@ -29,7 +28,6 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
   Uint8List? _image;
 
   String? _errorMsg;
-  // bool creationRequired = false;
 
   late Course course;
   @override
@@ -46,7 +44,6 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
     hoursController.dispose();
     weeksController.dispose();
     classroomController.dispose();
-
     super.dispose();
   }
 
@@ -79,7 +76,6 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
         BlocListener<CreateCourseCubit, CreateCourseState>(
           listener: (context, state) {
             if (state is CreateCourseLoading) {
-             
               const CircularProgressIndicator();
             } else if (state is CreateCourseSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -88,9 +84,6 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
                   backgroundColor: Colors.green,
                 ),
               );
-              // setState(() {
-              //   creationRequired = false;
-              // });
               context.go('/home');
             } else if (state is CreateCourseFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -107,110 +100,123 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         body: Center(
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Create a Course',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 800),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Create a Course',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    onTap: () async {
-                      final ImagePicker picker = ImagePicker();
+                    const SizedBox(height: 20),
+                    InkWell(
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: () async {
+                        final ImagePicker picker = ImagePicker();
+                        final XFile? image = await picker.pickImage(
+                          source: ImageSource.gallery,
+                          maxHeight: 1000,
+                          maxWidth: 1000,
+                        );
 
-                      final XFile? image = await picker.pickImage(
-                        source: ImageSource.gallery,
-                        maxHeight: 1000,
-                        maxWidth: 1000,
-                      );
+                        _image = await image!.readAsBytes();
 
-                      _image = await image!.readAsBytes();
-
-                      if (_image != null && context.mounted) {
-                        BlocProvider.of<UploadPictureBloc>(context).add(
-                            UploadPicture(
-                                await image.readAsBytes(), "course_images"));
-                      }
-                    },
-                    child: course.imageUrl.isNotEmpty
-                        ? Ink(
-                            width: 400,
-                            height: 300,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white,
-                            ),
-                            child: Image.memory(
-                              _image!,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : Ink(
-                            width: 400,
-                            height: 300,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  FontAwesomeIcons.camera,
-                                  size: 100,
-                                  color: Colors.grey.shade200,
+                        if (_image != null && context.mounted) {
+                          BlocProvider.of<UploadPictureBloc>(context).add(
+                              UploadPicture(
+                                  await image.readAsBytes(), "course_images"));
+                        }
+                      },
+                      child: _image != null
+                          ? Ink(
+                              width: double.infinity,
+                              height: 300,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white,
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 5),
+                                  ),
+                                ],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.memory(
+                                  _image!,
+                                  fit: BoxFit.cover,
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                const Text(
-                                  "Add a Picture here...",
-                                  style: TextStyle(color: Colors.grey),
-                                )
-                              ],
+                              ),
+                            )
+                          : Ink(
+                              width: double.infinity,
+                              height: 300,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white,
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 5),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    FontAwesomeIcons.camera,
+                                    size: 100,
+                                    color: Colors.grey.shade300,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Text(
+                                    "Add a Picture here...",
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                  ),
-                  const SizedBox(height: 20),
-                  Form(
+                    ),
+                    const SizedBox(height: 20),
+                    Form(
                       key: _formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            width: 400,
-                            child: MyTextField(
-                              fillColor: Colors.white,
-                              controller: nameController,
-                              hintText: 'Course Name',
-                              obscureText: false,
-                              keyboardType: TextInputType.text,
-                              errorMsg: _errorMsg,
-                              validator: (val) {
-                                if (val!.isEmpty) {
-                                  return 'Please fill in this field';
-                                }
-                                return null;
-                              },
-                              textStyle: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          MyTextField(
+                            fillColor: Colors.white,
+                            controller: nameController,
+                            hintText: 'Course Name',
+                            obscureText: false,
+                            keyboardType: TextInputType.text,
+                            errorMsg: _errorMsg,
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return 'Please fill in this field';
+                              }
+                              return null;
+                            },
+                            textStyle: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                           const SizedBox(height: 10),
-                          SizedBox(
-                            width: 400,
-                            child: Row(
-                              children: [
-                                MyMacroWidgetField(
+                          Row(
+                            children: [
+                              Flexible(
+                                child: MyMacroWidgetField(
                                   title: 'Course Code',
                                   icon: FontAwesomeIcons.hashtag,
                                   iconColor: Colors.lightBlue,
@@ -222,8 +228,10 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
                                     return null;
                                   },
                                 ),
-                                const SizedBox(width: 10),
-                                MyMacroWidgetField(
+                              ),
+                              const SizedBox(width: 10),
+                              Flexible(
+                                child: MyMacroWidgetField(
                                   title: 'Classroom',
                                   icon: FontAwesomeIcons.landmark,
                                   iconColor: Colors.lightGreen,
@@ -235,15 +243,14 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
                                     return null;
                                   },
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 10),
-                          SizedBox(
-                            width: 400,
-                            child: Row(
-                              children: [
-                                MyMacroWidgetField(
+                          Row(
+                            children: [
+                              Flexible(
+                                child: MyMacroWidgetField(
                                   title: 'Weeks',
                                   icon: FontAwesomeIcons.calendarWeek,
                                   iconColor: Colors.tealAccent,
@@ -258,8 +265,10 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
                                     return null;
                                   },
                                 ),
-                                const SizedBox(width: 10),
-                                MyMacroWidgetField(
+                              ),
+                              const SizedBox(width: 10),
+                              Flexible(
+                                child: MyMacroWidgetField(
                                   title: 'Hours per Week',
                                   icon: FontAwesomeIcons.clock,
                                   iconColor: Colors.orangeAccent,
@@ -274,38 +283,26 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
                                     return null;
                                   },
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ],
-                      )),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  BlocBuilder<CreateCourseCubit, CreateCourseState>(
-                    builder: (context, state) {
-                      if (state is CreateCourseLoading) {
-                        return const CircularProgressIndicator();
-                      }
-
-                      return SizedBox(
-                        width: 400,
-                        height: 40,
-                        child: TextButton(
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    BlocBuilder<CreateCourseCubit, CreateCourseState>(
+                      builder: (context, state) {
+                        return SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                //TODO: later you might want to upload the image here so that the image gets uploaded to the server only when the form is valid and the course is ready
-
-                                // BlocProvider.of<UploadPictureBloc>(context)
-                                //     .add(UploadPicture(
-                                //         _image!, "course_images"));
-
                                 final authState =
                                     BlocProvider.of<AuthenticationBloc>(context)
                                         .state;
                                 if (authState.status ==
                                     AuthenticationStatus.authenticated) {
-                                  // course.lecturerId = authState.user!.userId;
                                   course = course.copyWith(
                                     lecturerId: authState.user!.userId,
                                   );
@@ -318,52 +315,44 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
                                   hours: int.parse(hoursController.text),
                                   weeks: int.parse(weeksController.text),
                                 );
+
                                 BlocProvider.of<CreateCourseCubit>(context)
                                     .createCourse(course);
                               }
                             },
-                            style: TextButton.styleFrom(
-                                elevation: 3.0,
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(60))),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 25, vertical: 5),
-                              child: Text(
-                                'Create Course',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600),
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(60),
                               ),
-                            )),
-                      );
-                    },
-                  )
-                ],
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 25, vertical: 10),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                            ),
+                            child: state is CreateCourseLoading
+                                ? const CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
+                                  )
+                                : const Text(
+                                    'Create Course',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
     );
-  }
-
-  selectImage() async {
-    final ImagePicker picker = ImagePicker();
-
-    final XFile? file = await picker.pickImage(
-      source: ImageSource.gallery,
-      maxHeight: 1000,
-      maxWidth: 1000,
-    );
-
-    if (file != null) {
-      return await file.readAsBytes();
-    }
   }
 }
