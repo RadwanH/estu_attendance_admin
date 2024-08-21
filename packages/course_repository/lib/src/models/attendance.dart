@@ -13,6 +13,8 @@ class Attendance {
   final int timer;
   final List<String>? attendeesIds;
   final List<int> forHours;
+  final bool isActive;
+  final String generatedCode;
 
   Attendance({
     required this.id,
@@ -23,6 +25,8 @@ class Attendance {
     required this.timer,
     this.attendeesIds,
     required this.forHours,
+    required this.isActive,
+    required this.generatedCode,
   }) : this.date = date ?? DateTime.now();
 
   static final empty = Attendance(
@@ -34,6 +38,8 @@ class Attendance {
     timer: 0,
     attendeesIds: [],
     forHours: [],
+    generatedCode: '',
+    isActive: false,
   );
 
   AttendanceEntity toEntity() {
@@ -46,6 +52,8 @@ class Attendance {
       timer: timer,
       attendeesIds: attendeesIds!,
       forHours: forHours,
+      isActive: isActive,
+      generatedCode: generatedCode,
     );
   }
 
@@ -59,28 +67,8 @@ class Attendance {
       timer: entity.timer,
       attendeesIds: entity.attendeesIds,
       forHours: entity.forHours,
-    );
-  }
-
-  Attendance copyWith({
-    String? id,
-    String? lecturerId,
-    String? courseId,
-    int? week,
-    DateTime? date,
-    int? timer,
-    List<String>? attendeesIds,
-    List<int>? forHours,
-  }) {
-    return Attendance(
-      id: id ?? this.id,
-      lecturerId: lecturerId ?? this.lecturerId,
-      courseId: courseId ?? this.courseId,
-      week: week ?? this.week,
-      date: date ?? this.date,
-      timer: timer ?? this.timer,
-      attendeesIds: attendeesIds ?? this.attendeesIds,
-      forHours: forHours ?? this.forHours,
+      isActive: entity.isActive,
+      generatedCode: entity.generatedCode,
     );
   }
 
@@ -94,6 +82,35 @@ class Attendance {
     date: $date, 
     timer: $timer, 
     attendeesIds: $attendeesIds, 
-    forHours: $forHours)''';
+    forHours: $forHours),
+    isActive: $isActive,
+    generatedCode: $generatedCode
+    ''';
+  }
+
+  Attendance copyWith({
+    String? id,
+    String? lecturerId,
+    String? courseId,
+    int? week,
+    DateTime? date,
+    int? timer,
+    List<String>? attendeesIds,
+    List<int>? forHours,
+    bool? isActive,
+    String? generatedCode,
+  }) {
+    return Attendance(
+      id: id ?? this.id,
+      lecturerId: lecturerId ?? this.lecturerId,
+      courseId: courseId ?? this.courseId,
+      week: week ?? this.week,
+      date: date ?? this.date,
+      timer: timer ?? this.timer,
+      attendeesIds: attendeesIds ?? this.attendeesIds,
+      forHours: forHours ?? this.forHours,
+      isActive: isActive ?? this.isActive,
+      generatedCode: generatedCode ?? this.generatedCode,
+    );
   }
 }

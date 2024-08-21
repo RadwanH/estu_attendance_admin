@@ -175,15 +175,6 @@ class LecturerCourseCard extends StatelessWidget {
                         vertical: 0,
                       ),
                       child: Text(
-                          'Attendances: ${course.attendancesIds == null ? 0 : course.attendancesIds!.length}'),
-                    ),
-                    const SizedBox(height: 6),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 0,
-                      ),
-                      child: Text(
                           'Students: ${course.studentsIds == null ? 0 : course.studentsIds!.length}'),
                     ),
                   ],

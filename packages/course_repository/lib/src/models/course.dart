@@ -63,7 +63,6 @@ class Course {
       classroom: entity.classroom,
       lecturerId: entity.lecturerId,
       attendancesIds: entity.attendancesIds,
-      // attendances: entity.attendances,
       weeks: entity.weeks,
     );
   }

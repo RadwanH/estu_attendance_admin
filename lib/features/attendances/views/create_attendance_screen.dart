@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../blocs/authentication_bloc/authentication_bloc.dart';
+import '../blocs/current_attendance_cubit/current_attendance_cubit.dart';
 
 class OpenAttendanceScreen extends StatefulWidget {
   final Course? course;
@@ -32,7 +33,6 @@ class _OpenAttendanceScreenState extends State<OpenAttendanceScreen> {
     super.initState();
     selectedHours = List<bool>.filled(widget.course!.hours, false);
 
-    attendance = Attendance.empty;
     selectedTimer = '15';
 
     timerDropdownItems = List.generate(24, (index) {
@@ -56,11 +56,14 @@ class _OpenAttendanceScreenState extends State<OpenAttendanceScreen> {
               duration: Duration(seconds: 2),
             ),
           );
-          Future.delayed(const Duration(seconds: 1), () {
-            context.go('/attendance', extra: widget.course);
-            print(
-                'Navigating to /attendance for course ${widget.course.toString()} ');
-          });
+
+          context.go(
+            '/attendance/active-attendance',
+            extra: {
+              'attendance': state.attendance,
+              'course': widget.course,
+            },
+          );
         } else if (state is CreateAttendanceFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -69,8 +72,6 @@ class _OpenAttendanceScreenState extends State<OpenAttendanceScreen> {
               duration: const Duration(seconds: 2),
             ),
           );
-        } else {
-          context.go('/attendance', extra: widget.course);
         }
       },
       child: Scaffold(
@@ -321,6 +322,7 @@ class _OpenAttendanceScreenState extends State<OpenAttendanceScreen> {
                                     week: int.parse(selectedWeek!),
                                     timer: int.parse(selectedTimer!),
                                     forHours: selectedHourIndices,
+                                    isActive: true,
                                   );
 
                                   print(attendance.toString());

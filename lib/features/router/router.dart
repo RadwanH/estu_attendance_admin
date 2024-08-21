@@ -1,4 +1,6 @@
 import 'package:course_repository/course_repository.dart';
+import 'package:estu_attendance_admin/features/attendances/blocs/current_attendance_cubit/current_attendance_cubit.dart';
+import 'package:estu_attendance_admin/features/attendances/views/active_attendance_screen.dart';
 import '../../blocs/authentication_bloc/authentication_bloc.dart';
 import '../attendances/blocs/create_attendance_cubit/create_attendance_cubit.dart';
 import '../attendances/views/attendance_screen.dart';
@@ -116,7 +118,7 @@ GoRouter router(AuthenticationBloc authenticationBloc) {
                           ..add(
                             GetAttendances(courseId: course!.courseId),
                           ),
-                  )
+                  ),
                 ],
                 child: AttendancesScreen(
                   course: course,
@@ -142,6 +144,28 @@ GoRouter router(AuthenticationBloc authenticationBloc) {
                 child: OpenAttendanceScreen(
                   course: course,
                 ),
+              );
+            },
+          ),
+          GoRoute(
+            path: '/attendance/active-attendance',
+            builder: (context, state) {
+              final extras = state.extra as Map<String, dynamic>;
+              final attendance = extras['attendance'] as Attendance;
+              final course = extras['course'] as Course;
+
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider.value(
+                    value: context.read<AuthenticationBloc>(),
+                  ),
+                  BlocProvider(
+                    create: (context) => CurrentAttendanceCubit(
+                      FirebaseAttendanceRepo(),
+                    )..startAttendanceSession(attendance),
+                  ),
+                ],
+                child: ActiveAttendanceScreen(course: course,),
               );
             },
           ),

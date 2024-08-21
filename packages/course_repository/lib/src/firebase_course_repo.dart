@@ -13,6 +13,29 @@ class FirebaseCourseRepo implements CourseRepo {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
+  Future<List<Course>> getStudentCourses(String studentId) async {
+    try {
+      final snapshot = await courseCollection
+          .where('studentsIds', arrayContains: studentId)
+          .get();
+
+      log('Firestore query snapshot: ${snapshot.docs.map((doc) => doc.data()).toList()}');
+
+      final courses = snapshot.docs
+          .map(
+              (doc) => Course.fromEntity(CourseEntity.fromDocument(doc.data())))
+          .toList();
+
+      log('Parsed courses: $courses');
+
+      return courses;
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
   Future<List<Course>> getCourses() async {
     try {
       return await courseCollection.get().then((snapshot) => snapshot.docs
@@ -37,11 +60,11 @@ class FirebaseCourseRepo implements CourseRepo {
   }
 
   @override
-  Future<Course> addCourse(Course course) {
+  Future<Course> addCourse(Course course) async {
     try {
-      return courseCollection
-          .add(course.toEntity().toDocument())
-          .then((doc) => course);
+      final docRef = await courseCollection.add(course.toEntity().toDocument());
+
+      return course.copyWith(courseId: docRef.id);
     } catch (e) {
       log(e.toString());
       rethrow;

@@ -67,4 +67,16 @@ class FirebaseUserRepo implements UserRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<MyUser> getUserById(String userId) {
+    try {
+      return usersCollection.doc(userId).get().then((value) {
+        return MyUser.fromEntity(MyUserEntity.fromDocument(value.data()!));
+      });
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }

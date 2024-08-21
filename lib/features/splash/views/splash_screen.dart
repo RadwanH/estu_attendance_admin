@@ -15,6 +15,19 @@ class SplashScreen extends StatelessWidget {
         listener: (context, state) {
           if (state.status == AuthenticationStatus.authenticated) {
             context.go('/home');
+            // context.go(
+            //   '/attendance/active-attendance',
+            //   extra: Attendance(
+            //     id: '2d3ec1f0-5e10-11ef-b63f-bbd5110a8455',
+            //     lecturerId: '',
+            //     courseId: '2d3ec1f0-5e10-11ef-b63f-bbd5110a8455',
+            //     week: 3,
+            //     timer: 1,
+            //     forHours: [1, 2, 3],
+            //     isActive: true,
+            //     generatedCode: 'XYUJ9B',
+            //   ),
+            // );
           } else if (state.status == AuthenticationStatus.unauthenticated) {
             context.go('/login');
           }

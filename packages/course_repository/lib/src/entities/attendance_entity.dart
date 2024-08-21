@@ -10,6 +10,8 @@ class AttendanceEntity {
   final int timer;
   final List<String>? attendeesIds;
   final List<int> forHours;
+  final bool isActive;
+  final String generatedCode;
 
   AttendanceEntity({
     required this.id,
@@ -20,6 +22,8 @@ class AttendanceEntity {
     required this.timer,
     this.attendeesIds,
     required this.forHours,
+    required this.isActive,
+    required this.generatedCode,
   }) : this.date = date ?? DateTime.now();
 
   static final empty = AttendanceEntity(
@@ -30,6 +34,8 @@ class AttendanceEntity {
     date: DateTime.now(),
     timer: 0,
     forHours: [],
+    generatedCode: '',
+    isActive: false,
   );
 
   Map<String, Object?> toDocument() {
@@ -42,6 +48,8 @@ class AttendanceEntity {
       'timer': timer,
       'attendeesIds': attendeesIds,
       'forHours': forHours,
+      'isActive': isActive,
+      'generatedCode': generatedCode,
     };
   }
 
@@ -60,6 +68,8 @@ class AttendanceEntity {
       forHours:
           (doc['forHours'] as List<dynamic>?)?.map((e) => e as int).toList() ??
               [],
+      isActive: doc['isActive'] as bool,
+      generatedCode: doc['generatedCode'] as String,
     );
   }
 }
