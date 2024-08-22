@@ -15,8 +15,14 @@ class FirebaseAttendanceRepo implements AttendanceRepo {
     try {
       final docRef = await attendanceCollection
           .add(courseAttendance.toEntity().toDocument());
+
+      final generatedId = docRef.id;
+
+      // Update the Firestore document with the generated ID
+      await docRef.update({'id': generatedId});
+
       // Return the attendance with the generated ID
-      return courseAttendance.copyWith(id: docRef.id);
+      return courseAttendance.copyWith(id: generatedId);
     } catch (e) {
       log(e.toString());
       rethrow;
