@@ -1,8 +1,11 @@
 import 'package:course_repository/course_repository.dart';
+import 'package:estu_attendance_admin/blocs/get_students_cubit/get_students_cubit.dart';
 import 'package:estu_attendance_admin/features/attendances/blocs/current_attendance_cubit/current_attendance_cubit.dart';
 import 'package:estu_attendance_admin/features/attendances/views/active_attendance_screen.dart';
+import 'package:user_repository/user_repository.dart';
 import '../../blocs/authentication_bloc/authentication_bloc.dart';
 import '../attendances/blocs/create_attendance_cubit/create_attendance_cubit.dart';
+import '../attendances/views/attendance_details_screen.dart';
 import '../attendances/views/attendance_screen.dart';
 import '../attendances/views/create_attendance_screen.dart';
 import '../auth/blocs/sign_in_bloc/sign_in_bloc.dart';
@@ -165,7 +168,27 @@ GoRouter router(AuthenticationBloc authenticationBloc) {
                     )..startAttendanceSession(attendance),
                   ),
                 ],
-                child: ActiveAttendanceScreen(course: course,),
+                child: ActiveAttendanceScreen(
+                  course: course,
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            path: '/attendance/details',
+            builder: (context, state) {
+              final extras = state.extra as Map<String, dynamic>;
+              final attendance = extras['attendance'] as Attendance;
+              final course = extras['course'] as Course;
+
+              return BlocProvider(
+                create: (context) => GetStudentsCubit(
+                  FirebaseUserRepo(),
+                )..getStudents(course.studentsIds ?? []),
+                child: AttendanceDetailsScreen(
+                  course: course,
+                  attendance: attendance,
+                ),
               );
             },
           ),

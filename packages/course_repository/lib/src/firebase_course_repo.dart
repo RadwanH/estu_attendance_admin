@@ -64,7 +64,11 @@ class FirebaseCourseRepo implements CourseRepo {
     try {
       final docRef = await courseCollection.add(course.toEntity().toDocument());
 
-      return course.copyWith(courseId: docRef.id);
+      final generatedId = docRef.id;
+
+      await docRef.update({'courseId': generatedId});
+
+      return course.copyWith(courseId: generatedId);
     } catch (e) {
       log(e.toString());
       rethrow;

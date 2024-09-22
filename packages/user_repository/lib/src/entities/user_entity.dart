@@ -6,7 +6,6 @@ class MyUserEntity {
   final String lastname;
   final String? photoUrl;
   final String type;
-  // final Course[] courses;
 
   MyUserEntity({
     required this.userId,
@@ -16,7 +15,6 @@ class MyUserEntity {
     required this.lastname,
     this.photoUrl,
     required this.type,
-    // this.courses,
   });
 
   Map<String, Object?> toDocument() {
@@ -28,7 +26,6 @@ class MyUserEntity {
       'lastname': lastname,
       'photoUrl': photoUrl,
       'type': type,
-      // 'courses': courses,
     };
   }
 
@@ -41,7 +38,6 @@ class MyUserEntity {
       lastname: doc['lastname'] as String,
       photoUrl: doc['photoUrl'] as String?,
       type: doc['type'] as String,
-      // courses: doc['courses'] as Course[],
     );
   }
 }

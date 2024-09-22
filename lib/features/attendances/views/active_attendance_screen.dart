@@ -176,6 +176,8 @@ class ActiveAttendanceScreen extends StatelessWidget {
                             ),
                           );
                         } else {
+                          print(
+                              'state in the last else clause of active attendance:  $state');
                           return const Center(
                               child: CircularProgressIndicator());
                         }

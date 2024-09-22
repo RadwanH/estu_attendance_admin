@@ -6,7 +6,6 @@ class CourseEntity {
   final int hours;
   final String classroom;
   final String lecturerId;
-  final List<String>? attendancesIds;
   final List<String>? studentsIds;
   final int weeks;
 
@@ -18,7 +17,6 @@ class CourseEntity {
     required this.hours,
     required this.classroom,
     required this.lecturerId,
-    this.attendancesIds,
     this.studentsIds,
     this.weeks = 14,
   });
@@ -31,6 +29,7 @@ class CourseEntity {
     classroom: '',
     lecturerId: '',
     imageUrl: '',
+    studentsIds: [],
   );
 
   Map<String, Object?> toDocument() {
@@ -42,7 +41,6 @@ class CourseEntity {
       'hours': hours,
       'classroom': classroom,
       'lecturerId': lecturerId,
-      'attendancesIds': attendancesIds,
       'studentsIds': studentsIds,
       'weeks': weeks,
     };
@@ -57,8 +55,6 @@ class CourseEntity {
       hours: doc['hours'] as int,
       classroom: doc['classroom'] as String,
       lecturerId: doc['lecturerId'] as String,
-      attendancesIds:
-          (doc['attendancesIds'] as List?)?.map((e) => e as String).toList(),
       studentsIds:
           (doc['studentsIds'] as List?)?.map((e) => e as String).toList(),
       weeks: doc['weeks'] as int,

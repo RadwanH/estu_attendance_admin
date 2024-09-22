@@ -8,7 +8,6 @@ class MyUser {
   String lastname;
   String? photoUrl;
   String type;
-  // final Course[] courses;
 
   MyUser({
     required this.userId,
@@ -18,7 +17,6 @@ class MyUser {
     required this.lastname,
     this.photoUrl,
     required this.type,
-    // this.courses,
   });
 
   static final empty = MyUser(
@@ -28,7 +26,6 @@ class MyUser {
     name: '',
     lastname: '',
     type: '',
-    // courses = [''],
   );
 
   MyUserEntity toEntity() {
@@ -40,7 +37,6 @@ class MyUser {
       lastname: lastname,
       photoUrl: photoUrl,
       type: type,
-      // courses: courses,
     );
   }
 
@@ -53,7 +49,6 @@ class MyUser {
       lastname: entity.lastname,
       photoUrl: entity.photoUrl,
       type: entity.type,
-      // courses: entity.courses,
     );
   }
 

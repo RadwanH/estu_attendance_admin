@@ -34,6 +34,9 @@ class CurrentAttendanceCubit extends Cubit<CurrentAttendanceState> {
               remainingTime,
             ),
           );
+
+          
+
         } else {
           timer.cancel();
         }

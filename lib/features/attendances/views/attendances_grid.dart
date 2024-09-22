@@ -1,11 +1,17 @@
 import 'package:course_repository/course_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'components/atttendance_card.dart';
 
 class AttendancesGrid extends StatelessWidget {
   final List<Attendance> attendances;
-  const AttendancesGrid({super.key, required this.attendances});
+  final Course course;
+  const AttendancesGrid({
+    super.key,
+    required this.attendances,
+    required this.course,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +49,15 @@ class AttendancesGrid extends StatelessWidget {
                                       MediaQuery.of(context).size.width / 2 -
                                           32,
                                 ),
-                                child: AttendanceCard(attendance: attendance),
+                                child: InkWell(
+                                  onTap: () {
+                                    context.go('/attendance/details', extra: {
+                                      'course': course,
+                                      'attendance': attendance,
+                                    });
+                                  },
+                                  child: AttendanceCard(attendance: attendance),
+                                ),
                               ),
                             )
                             .toList(),

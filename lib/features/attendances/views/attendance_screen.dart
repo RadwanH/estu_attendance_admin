@@ -70,7 +70,6 @@ class AttendancesScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SizedBox(
                   height: 20,
                 ),
@@ -90,7 +89,9 @@ class AttendancesScreen extends StatelessWidget {
                             );
                           }
                           return AttendancesGrid(
-                              attendances: state.attendances);
+                            attendances: state.attendances,
+                            course: course!,
+                          );
                         } else if (state is GetAttendancesLoading) {
                           return const Center(
                             child: CircularProgressIndicator(),

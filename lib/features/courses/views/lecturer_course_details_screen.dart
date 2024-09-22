@@ -140,11 +140,10 @@ class LecturerCourseDetailsScreen extends StatelessWidget {
                                 icon: FontAwesomeIcons.users,
                                 iconColor: Colors.deepPurple),
                             const SizedBox(width: 10),
-                            MyMiniTextCard(
-                                title: 'Attendances',
-                                value:
-                                    ' ${course!.attendancesIds == null ? 0 : course!.attendancesIds!.length}',
-                                icon: FontAwesomeIcons.calendar,
+                            const MyMiniTextCard(
+                                title: 'Lecturer: ',
+                                value: 'You',
+                                icon: FontAwesomeIcons.user,
                                 iconColor: Colors.deepOrange),
                           ],
                         ),

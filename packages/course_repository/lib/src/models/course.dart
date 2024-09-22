@@ -11,7 +11,6 @@ class Course {
   int hours;
   String classroom;
   String lecturerId;
-  List<String>? attendancesIds;
   List<String>? studentsIds;
   int weeks;
 
@@ -23,7 +22,6 @@ class Course {
     required this.hours,
     required this.classroom,
     required this.lecturerId,
-    this.attendancesIds,
     this.studentsIds,
     this.weeks = 14,
   });
@@ -36,6 +34,7 @@ class Course {
     classroom: '',
     lecturerId: '',
     imageUrl: '',
+    studentsIds: [],
   );
 
   CourseEntity toEntity() {
@@ -48,8 +47,7 @@ class Course {
       classroom: classroom,
       lecturerId: lecturerId,
       weeks: weeks,
-      attendancesIds: attendancesIds,
-      
+      studentsIds: studentsIds,
     );
   }
 
@@ -62,8 +60,8 @@ class Course {
       hours: entity.hours,
       classroom: entity.classroom,
       lecturerId: entity.lecturerId,
-      attendancesIds: entity.attendancesIds,
       weeks: entity.weeks,
+      studentsIds: entity.studentsIds,
     );
   }
 
@@ -77,12 +75,10 @@ class Course {
      hours: $hours, 
      classroom: $classroom, 
      lecturerId: $lecturerId, 
-     attendancesIds: $attendancesIds, 
-     weeks: $weeks }''';
+     weeks: $weeks,
+     studentsIds: $studentsIds
+     }''';
   }
-
-  
- 
 
   Course copyWith({
     String? courseId,
@@ -92,7 +88,7 @@ class Course {
     int? hours,
     String? classroom,
     String? lecturerId,
-    List<String>? attendancesIds,
+    List<String>? studentsIds,
     int? weeks,
   }) {
     return Course(
@@ -103,7 +99,7 @@ class Course {
       hours: hours ?? this.hours,
       classroom: classroom ?? this.classroom,
       lecturerId: lecturerId ?? this.lecturerId,
-      attendancesIds: attendancesIds ?? this.attendancesIds,
+      studentsIds: studentsIds ?? this.studentsIds,
       weeks: weeks ?? this.weeks,
     );
   }
