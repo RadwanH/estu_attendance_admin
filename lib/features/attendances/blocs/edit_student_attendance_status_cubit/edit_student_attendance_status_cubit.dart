@@ -19,26 +19,21 @@ class EditStudentAttendanceStatusCubit
     emit(EditStudentAttendanceStatusLoading());
 
     try {
-      // Create a copy of attendeesIds to avoid mutating the original list
       final updatedAttendeesIds =
           List<String>.from(attendance.attendeesIds ?? []);
 
-      // Update the attendeesIds based on presence or absence
       if (isPresent && !updatedAttendeesIds.contains(studentId)) {
         updatedAttendeesIds.add(studentId);
       } else if (!isPresent && updatedAttendeesIds.contains(studentId)) {
         updatedAttendeesIds.remove(studentId);
       }
 
-      // Create a new Attendance object with updated attendeesIds
       final updatedAttendance = attendance.copyWith(
         attendeesIds: updatedAttendeesIds,
       );
 
-      // Update the attendance record in the repository
       await attendanceRepo.updateAttendance(updatedAttendance);
 
-      // Emit the success state with the updated Attendance object
       emit(EditStudentAttendanceStatusSuccess(updatedAttendance));
     } catch (e) {
       emit(EditStudentAttendanceStatusFailure(e.toString()));

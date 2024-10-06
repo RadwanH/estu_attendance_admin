@@ -1,5 +1,4 @@
 import 'package:course_repository/course_repository.dart';
-import 'package:estu_attendance_admin/features/attendances/blocs/current_attendance_cubit/current_attendance_cubit.dart';
 import '../blocs/get_attendances_bloc/get_attendances_bloc.dart';
 
 import 'package:flutter/material.dart';
