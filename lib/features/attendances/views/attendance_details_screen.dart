@@ -1,6 +1,9 @@
-import 'package:estu_attendance_admin/blocs/get_students_cubit/get_students_cubit.dart';
+import 'package:estu_attendance_admin/features/attendances/blocs/edit_student_attendance_status_cubit/edit_student_attendance_status_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:estu_attendance_admin/blocs/get_students_cubit/get_students_cubit.dart';
+import 'package:estu_attendance_admin/features/attendances/views/components/attendance_card_lg.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:course_repository/course_repository.dart';
@@ -17,7 +20,6 @@ class AttendanceDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('students Ids at the attendance details screen: ${course}');
     context.read<GetStudentsCubit>().getStudents(course.studentsIds ?? []);
     return Scaffold(
       appBar: AppBar(
@@ -39,20 +41,26 @@ class AttendanceDetailsScreen extends StatelessWidget {
         ],
         title: const Center(child: Text('Attendance Details')),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
                 'Course: ${course.name}',
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
-              const SizedBox(height: 16),
-              Expanded(
+            ),
+            AttendanceCardLg(attendance: attendance),
+            const SizedBox(height: 16),
+            Center(
+              child: BlocProvider(
+                create: (context) => EditStudentAttendanceStatusCubit(
+                  FirebaseAttendanceRepo(),
+                ),
                 child: BlocBuilder<GetStudentsCubit, GetStudentsState>(
                   builder: (context, state) {
                     if (state is GetStudentsLoading) {
@@ -80,7 +88,7 @@ class AttendanceDetailsScreen extends StatelessWidget {
                             ],
                           ),
                           child: DataTable(
-                            columnSpacing: 20,
+                            columnSpacing: 30,
                             dataRowMaxHeight: 60,
                             headingRowColor: WidgetStateProperty.all(
                               Theme.of(context)
@@ -92,10 +100,8 @@ class AttendanceDetailsScreen extends StatelessWidget {
                               DataColumn(label: Text('TC Number')),
                               DataColumn(label: Text('Name')),
                               DataColumn(label: Text('Surname')),
-                              DataColumn(
-                                label: Text('Attendance'),
-                              ),
-
+                              DataColumn(label: Text('Attendance')),
+                              DataColumn(label: Text('Edit')),
                             ],
                             rows: state.students.map((student) {
                               bool attended = attendance.attendeesIds!
@@ -105,12 +111,80 @@ class AttendanceDetailsScreen extends StatelessWidget {
                                 DataCell(Text(student.name)),
                                 DataCell(Text(student.lastname)),
                                 DataCell(
-                                  Icon(
-                                    attended
-                                        ? Icons.check_circle
-                                        : Icons.cancel,
-                                    color: attended ? Colors.green : Colors.red,
-                                    size: 30,
+                                  Center(
+                                    child: Icon(
+                                      attended
+                                          ? Icons.check_circle
+                                          : Icons.cancel,
+                                      color:
+                                          attended ? Colors.green : Colors.red,
+                                      size: 30,
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  IconButton(
+                                    icon: const Icon(Icons.edit),
+                                    onPressed: () {
+                                      // Pass the current context (from the parent widget)
+                                      final parentContext = context;
+
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title:
+                                                const Text('Edit Attendance'),
+                                            content: const Text(
+                                                'Mark the student as present or absent?'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  if (!attended) {
+                                                    parentContext
+                                                        .read<
+                                                            EditStudentAttendanceStatusCubit>()
+                                                        .editStudentAttendance(
+                                                          attendance:
+                                                              attendance,
+                                                          studentId:
+                                                              student.userId,
+                                                          isPresent: true,
+                                                        );
+                                                  }
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('Present'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  if (attended) {
+                                                    parentContext
+                                                        .read<
+                                                            EditStudentAttendanceStatusCubit>()
+                                                        .editStudentAttendance(
+                                                          attendance:
+                                                              attendance,
+                                                          studentId:
+                                                              student.userId,
+                                                          isPresent: false,
+                                                        );
+                                                  }
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('Absent'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('Cancel'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
                                   ),
                                 ),
                               ]);
@@ -119,15 +193,13 @@ class AttendanceDetailsScreen extends StatelessWidget {
                         ),
                       );
                     } else {
-                      return const Center(
-                        child: Text('Unexpected state'),
-                      );
+                      return const Center(child: Text('Unexpected state'));
                     }
                   },
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
