@@ -8,25 +8,33 @@ import 'package:go_router/go_router.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:course_repository/course_repository.dart';
 
-class AttendanceDetailsScreen extends StatelessWidget {
+class AttendanceDetailsScreen extends StatefulWidget {
   final Course course;
-  final Attendance attendance;
+  Attendance attendance;
 
-  const AttendanceDetailsScreen({
-    Key? key,
+  AttendanceDetailsScreen({
+    super.key,
     required this.course,
     required this.attendance,
-  }) : super(key: key);
+  });
 
   @override
+  State<AttendanceDetailsScreen> createState() =>
+      _AttendanceDetailsScreenState();
+}
+
+class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen> {
+  @override
   Widget build(BuildContext context) {
-    context.read<GetStudentsCubit>().getStudents(course.studentsIds ?? []);
+    context
+        .read<GetStudentsCubit>()
+        .getStudents(widget.course.studentsIds ?? []);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            context.go('/attendance', extra: course);
+            context.go('/attendance', extra: widget.course);
           },
         ),
         actions: [
@@ -35,7 +43,7 @@ class AttendanceDetailsScreen extends StatelessWidget {
             onPressed: () {
               context
                   .read<GetStudentsCubit>()
-                  .getStudents(course.studentsIds ?? []);
+                  .getStudents(widget.course.studentsIds ?? []);
             },
           ),
         ],
@@ -48,160 +56,200 @@ class AttendanceDetailsScreen extends StatelessWidget {
           children: [
             Center(
               child: Text(
-                'Course: ${course.name}',
+                'Course: ${widget.course.name}',
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
             ),
-            AttendanceCardLg(attendance: attendance),
+            AttendanceCardLg(attendance: widget.attendance),
             const SizedBox(height: 16),
             Center(
               child: BlocProvider(
                 create: (context) => EditStudentAttendanceStatusCubit(
                   FirebaseAttendanceRepo(),
                 ),
-                child: BlocBuilder<GetStudentsCubit, GetStudentsState>(
-                  builder: (context, state) {
-                    if (state is GetStudentsLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (state is GetStudentsFailure) {
-                      return Center(child: Text('Error: ${state.message}'));
-                    } else if (state is GetStudentsSuccess) {
-                      if (state.students.isEmpty) {
-                        return const Center(child: Text('No students found.'));
-                      }
+                child: BlocListener<EditStudentAttendanceStatusCubit,
+                    EditStudentAttendanceStatusState>(
+                  listener: (context, state) {
+                    if (state is EditStudentAttendanceStatusSuccess) {
+                      final updatedAttendance = state.attendance;
 
-                      return SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                spreadRadius: 2,
-                                blurRadius: 6,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: DataTable(
-                            columnSpacing: 30,
-                            dataRowMaxHeight: 60,
-                            headingRowColor: WidgetStateProperty.all(
-                              Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withOpacity(0.1),
-                            ),
-                            columns: const [
-                              DataColumn(label: Text('TC Number')),
-                              DataColumn(label: Text('Name')),
-                              DataColumn(label: Text('Surname')),
-                              DataColumn(label: Text('Attendance')),
-                              DataColumn(label: Text('Edit')),
-                            ],
-                            rows: state.students.map((student) {
-                              bool attended = attendance.attendeesIds!
-                                  .contains(student.userId);
-                              return DataRow(cells: [
-                                DataCell(Text(student.tcId.toString())),
-                                DataCell(Text(student.name)),
-                                DataCell(Text(student.lastname)),
-                                DataCell(
-                                  Center(
-                                    child: Icon(
-                                      attended
-                                          ? Icons.check_circle
-                                          : Icons.cancel,
-                                      color:
-                                          attended ? Colors.green : Colors.red,
-                                      size: 30,
-                                    ),
-                                  ),
-                                ),
-                                DataCell(
-                                  IconButton(
-                                    icon: const Icon(Icons.edit),
-                                    onPressed: () {
-                                      // Pass the current context (from the parent widget)
-                                      final parentContext = context;
-
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title:
-                                                const Text('Edit Attendance'),
-                                            content: const Text(
-                                                'Mark the student as present or absent?'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  if (!attended) {
-                                                    parentContext
-                                                        .read<
-                                                            EditStudentAttendanceStatusCubit>()
-                                                        .editStudentAttendance(
-                                                          attendance:
-                                                              attendance,
-                                                          studentId:
-                                                              student.userId,
-                                                          isPresent: true,
-                                                        );
-                                                  }
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text('Present'),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  if (attended) {
-                                                    parentContext
-                                                        .read<
-                                                            EditStudentAttendanceStatusCubit>()
-                                                        .editStudentAttendance(
-                                                          attendance:
-                                                              attendance,
-                                                          studentId:
-                                                              student.userId,
-                                                          isPresent: false,
-                                                        );
-                                                  }
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text('Absent'),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text('Cancel'),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ]);
-                            }).toList(),
-                          ),
-                        ),
-                      );
-                    } else {
-                      return const Center(child: Text('Unexpected state'));
+                      setState(() {
+                        widget.attendance = updatedAttendance;
+                      });
+                      context
+                          .read<GetStudentsCubit>()
+                          .getStudents(widget.course.studentsIds ?? []);
                     }
                   },
+                  child: BlocBuilder<GetStudentsCubit, GetStudentsState>(
+                    builder: (context, state) {
+                      if (state is GetStudentsLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (state is GetStudentsFailure) {
+                        return Center(child: Text('Error: ${state.message}'));
+                      } else if (state is GetStudentsSuccess) {
+                        if (state.students.isEmpty) {
+                          return const Center(
+                              child: Text('No students found.'));
+                        }
+
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 2,
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: DataTable(
+                              columnSpacing: 30,
+                              dataRowMaxHeight: 60,
+                              headingRowColor: WidgetStateProperty.all(
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.1),
+                              ),
+                              columns: const [
+                                DataColumn(label: Text('TC Number')),
+                                DataColumn(label: Text('Name')),
+                                DataColumn(label: Text('Surname')),
+                                DataColumn(label: Text('Attendance')),
+                                DataColumn(label: Text('Edit')),
+                              ],
+                              rows: state.students.map((student) {
+                                bool attended = widget.attendance.attendeesIds!
+                                    .contains(student.userId);
+                                return DataRow(cells: [
+                                  DataCell(Text(student.tcId.toString())),
+                                  DataCell(Text(student.name)),
+                                  DataCell(Text(student.lastname)),
+                                  DataCell(
+                                    Center(
+                                      child: Icon(
+                                        attended
+                                            ? Icons.check_circle
+                                            : Icons.cancel,
+                                        color: attended
+                                            ? Colors.green
+                                            : Colors.red,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    IconButton(
+                                      icon: const Icon(Icons.edit),
+                                      onPressed: () {
+                                        final parentContext = context;
+
+                                        showStudentAttendanceEditingDialog(
+                                            context,
+                                            attended,
+                                            parentContext,
+                                            student);
+                                      },
+                                    ),
+                                  ),
+                                ]);
+                              }).toList(),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return const Center(child: Text('Unexpected state'));
+                      }
+                    },
+                  ),
                 ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Future<dynamic> showStudentAttendanceEditingDialog(BuildContext context,
+      bool attended, BuildContext parentContext, MyUser student) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Edit Attendance'),
+          content: const Text('Mark the student as present or absent?'),
+          actions: [
+            Row(
+              children: [
+                TextButton(
+                  onPressed: () {
+                    if (!attended) {
+                      parentContext
+                          .read<EditStudentAttendanceStatusCubit>()
+                          .editStudentAttendance(
+                            attendance: widget.attendance,
+                            studentId: student.userId,
+                            isPresent: true,
+                          );
+                    }
+
+                    Navigator.pop(context);
+                  },
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.check_circle,
+                        color: Colors.green,
+                      ),
+                      SizedBox(width: 5),
+                      Text('Present'),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    if (attended) {
+                      parentContext
+                          .read<EditStudentAttendanceStatusCubit>()
+                          .editStudentAttendance(
+                            attendance: widget.attendance,
+                            studentId: student.userId,
+                            isPresent: false,
+                          );
+                    }
+                    Navigator.pop(context);
+                  },
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.cancel,
+                        color: Colors.red,
+                      ),
+                      SizedBox(width: 5),
+                      Text('Absent'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

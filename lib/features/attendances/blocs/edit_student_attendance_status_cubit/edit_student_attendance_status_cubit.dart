@@ -4,12 +4,12 @@ import 'package:equatable/equatable.dart';
 
 part 'edit_student_attendance_status_state.dart';
 
-class EditStudentAttendanceStatusCubit extends Cubit<EditStudentAttendanceStatusState> {
+class EditStudentAttendanceStatusCubit
+    extends Cubit<EditStudentAttendanceStatusState> {
   final AttendanceRepo attendanceRepo;
 
-
-  EditStudentAttendanceStatusCubit(this.attendanceRepo) : super(EditStudentAttendanceStatusInitial());
-
+  EditStudentAttendanceStatusCubit(this.attendanceRepo)
+      : super(EditStudentAttendanceStatusInitial());
 
   Future<void> editStudentAttendance({
     required Attendance attendance,
@@ -19,23 +19,26 @@ class EditStudentAttendanceStatusCubit extends Cubit<EditStudentAttendanceStatus
     emit(EditStudentAttendanceStatusLoading());
 
     try {
-      // Check if the student's ID is already in the attendeesIds list
-      final updatedAttendeesIds = List<String>.from(attendance.attendeesIds ?? []);
+      // Create a copy of attendeesIds to avoid mutating the original list
+      final updatedAttendeesIds =
+          List<String>.from(attendance.attendeesIds ?? []);
 
+      // Update the attendeesIds based on presence or absence
       if (isPresent && !updatedAttendeesIds.contains(studentId)) {
-        // Mark as present by adding the student's ID
         updatedAttendeesIds.add(studentId);
       } else if (!isPresent && updatedAttendeesIds.contains(studentId)) {
-        // Mark as absent by removing the student's ID
         updatedAttendeesIds.remove(studentId);
       }
 
-      // Create an updated attendance object
-      final updatedAttendance = attendance.copyWith(attendeesIds: updatedAttendeesIds);
+      // Create a new Attendance object with updated attendeesIds
+      final updatedAttendance = attendance.copyWith(
+        attendeesIds: updatedAttendeesIds,
+      );
 
-      // Call repository to update the attendance in the backend
+      // Update the attendance record in the repository
       await attendanceRepo.updateAttendance(updatedAttendance);
 
+      // Emit the success state with the updated Attendance object
       emit(EditStudentAttendanceStatusSuccess(updatedAttendance));
     } catch (e) {
       emit(EditStudentAttendanceStatusFailure(e.toString()));
