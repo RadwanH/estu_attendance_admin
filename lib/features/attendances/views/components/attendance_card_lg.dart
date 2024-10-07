@@ -5,10 +5,12 @@ import 'package:intl/intl.dart';
 class AttendanceCardLg extends StatelessWidget {
   final Attendance attendance;
   final Color? color;
+  final String? courseName;
 
   const AttendanceCardLg({
     super.key,
     required this.attendance,
+    this.courseName,
     this.color,
   });
 
@@ -53,6 +55,17 @@ class AttendanceCardLg extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Center(
+                child: Text(
+                  courseName ?? 'No course name',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue.shade800,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

@@ -23,18 +23,17 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
   final nameController = TextEditingController();
   final codeController = TextEditingController();
   final hoursController = TextEditingController();
-  var weeksController = TextEditingController();
+  final weeksController = TextEditingController(text: '14');
   final classroomController = TextEditingController();
   Uint8List? _image;
-
-  String? _errorMsg;
+  String? errorMsg;
 
   late Course course;
+
   @override
   initState() {
     super.initState();
     course = Course.empty;
-    weeksController = TextEditingController(text: '14');
   }
 
   @override
@@ -55,7 +54,7 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
           listener: (context, state) {
             if (state is UploadPictureSuccess) {
               setState(() {
-                course.imageUrl = state.imgUrl;
+                course = course.copyWith(imageUrl: state.imgUrl);
               });
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -75,9 +74,7 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
         ),
         BlocListener<CreateCourseCubit, CreateCourseState>(
           listener: (context, state) {
-            if (state is CreateCourseLoading) {
-              const CircularProgressIndicator();
-            } else if (state is CreateCourseSuccess) {
+            if (state is CreateCourseSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Course Created Successfully'),
@@ -103,8 +100,7 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 800),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                padding: const EdgeInsets.all(20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -112,12 +108,12 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
                       'Create a Course',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 22,
+                        fontSize: 24,
                       ),
                     ),
                     const SizedBox(height: 20),
                     InkWell(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(16),
                       onTap: () async {
                         final ImagePicker picker = ImagePicker();
                         final XFile? image = await picker.pickImage(
@@ -126,43 +122,29 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
                           maxWidth: 1000,
                         );
 
-                        _image = await image!.readAsBytes();
-
-                        if (_image != null && context.mounted) {
+                        if (image != null) {
+                          _image = await image.readAsBytes();
                           BlocProvider.of<UploadPictureBloc>(context).add(
-                              UploadPicture(
-                                  await image.readAsBytes(), "course_images"));
+                            UploadPicture(_image!, "course_images"),
+                          );
                         }
                       },
                       child: _image != null
-                          ? Ink(
-                              width: double.infinity,
-                              height: 300,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white,
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 10,
-                                    offset: Offset(0, 5),
-                                  ),
-                                ],
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.memory(
-                                  _image!,
-                                  fit: BoxFit.cover,
-                                ),
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Image.memory(
+                                _image!,
+                                width: double.infinity,
+                                height: 300,
+                                fit: BoxFit.cover,
                               ),
                             )
-                          : Ink(
+                          : Container(
                               width: double.infinity,
                               height: 300,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white,
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(16),
                                 boxShadow: const [
                                   BoxShadow(
                                     color: Colors.black12,
@@ -177,13 +159,15 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
                                   Icon(
                                     FontAwesomeIcons.camera,
                                     size: 100,
-                                    color: Colors.grey.shade300,
+                                    color: Colors.grey.shade400,
                                   ),
                                   const SizedBox(height: 10),
                                   const Text(
-                                    "Add a Picture here...",
-                                    style: TextStyle(color: Colors.grey),
-                                  )
+                                    "Add a Picture...",
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -195,94 +179,61 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           MyTextField(
-                            fillColor: Colors.white,
                             controller: nameController,
                             hintText: 'Course Name',
-                            obscureText: false,
+                            validator: (val) => val!.isEmpty
+                                ? 'Please fill in this field'
+                                : null,
                             keyboardType: TextInputType.text,
-                            errorMsg: _errorMsg,
-                            validator: (val) {
-                              if (val!.isEmpty) {
-                                return 'Please fill in this field';
-                              }
-                              return null;
-                            },
-                            textStyle: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            obscureText: false,
                           ),
                           const SizedBox(height: 10),
                           Row(
                             children: [
-                              Flexible(
-                                child: MyMacroWidgetField(
-                                  title: 'Course Code',
-                                  icon: FontAwesomeIcons.hashtag,
-                                  iconColor: Colors.lightBlue,
-                                  controller: codeController,
-                                  validator: (val) {
-                                    if (val!.isEmpty) {
-                                      return 'Please fill in this field';
-                                    }
-                                    return null;
-                                  },
-                                ),
+                              MyMacroWidgetField(
+                                title: 'Course Code',
+                                icon: FontAwesomeIcons.hashtag,
+                                controller: codeController,
+                                validator: (val) => val!.isEmpty
+                                    ? 'Please fill in this field'
+                                    : null,
                               ),
                               const SizedBox(width: 10),
-                              Flexible(
-                                child: MyMacroWidgetField(
-                                  title: 'Classroom',
-                                  icon: FontAwesomeIcons.landmark,
-                                  iconColor: Colors.lightGreen,
-                                  controller: classroomController,
-                                  validator: (val) {
-                                    if (val!.isEmpty) {
-                                      return 'Please fill in this field';
-                                    }
-                                    return null;
-                                  },
-                                ),
+                              MyMacroWidgetField(
+                                title: 'Classroom',
+                                icon: FontAwesomeIcons.landmark,
+                                controller: classroomController,
+                                validator: (val) => val!.isEmpty
+                                    ? 'Please fill in this field'
+                                    : null,
                               ),
                             ],
                           ),
                           const SizedBox(height: 10),
                           Row(
                             children: [
-                              Flexible(
-                                child: MyMacroWidgetField(
-                                  title: 'Weeks',
-                                  icon: FontAwesomeIcons.calendarWeek,
-                                  iconColor: Colors.tealAccent,
-                                  controller: weeksController,
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                                  validator: (val) {
-                                    if (val!.isEmpty) {
-                                      return 'Please fill in this field';
-                                    }
-                                    return null;
-                                  },
-                                ),
+                              MyMacroWidgetField(
+                                title: 'Weeks',
+                                icon: FontAwesomeIcons.calendarWeek,
+                                controller: weeksController,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                validator: (val) => val!.isEmpty
+                                    ? 'Please fill in this field'
+                                    : null,
                               ),
                               const SizedBox(width: 10),
-                              Flexible(
-                                child: MyMacroWidgetField(
-                                  title: 'Hours per Week',
-                                  icon: FontAwesomeIcons.clock,
-                                  iconColor: Colors.orangeAccent,
-                                  controller: hoursController,
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                                  validator: (val) {
-                                    if (val!.isEmpty) {
-                                      return 'Please fill in this field';
-                                    }
-                                    return null;
-                                  },
-                                ),
+                              MyMacroWidgetField(
+                                title: 'Hours per Week',
+                                icon: FontAwesomeIcons.clock,
+                                controller: hoursController,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                validator: (val) => val!.isEmpty
+                                    ? 'Please fill in this field'
+                                    : null,
                               ),
                             ],
                           ),

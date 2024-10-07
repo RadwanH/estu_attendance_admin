@@ -62,15 +62,10 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Text(
-                'Course: ${widget.course.name}',
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
+            AttendanceCardLg(
+              attendance: widget.attendance,
+              courseName: widget.course.name,
             ),
-            AttendanceCardLg(attendance: widget.attendance),
             const SizedBox(height: 16),
             Center(
               child: BlocProvider(
