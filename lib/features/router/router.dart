@@ -1,7 +1,6 @@
 import 'package:course_repository/course_repository.dart';
 import 'package:estu_attendance_admin/blocs/get_students_cubit/get_students_cubit.dart';
 import 'package:estu_attendance_admin/features/attendances/blocs/current_attendance_cubit/current_attendance_cubit.dart';
-import 'package:estu_attendance_admin/features/attendances/blocs/edit_student_attendance_status_cubit/edit_student_attendance_status_cubit.dart';
 import 'package:estu_attendance_admin/features/attendances/views/active_attendance_screen.dart';
 import 'package:user_repository/user_repository.dart';
 import '../../blocs/authentication_bloc/authentication_bloc.dart';
@@ -17,7 +16,6 @@ import '../courses/views/lecturer_course_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
 import '../attendances/blocs/get_attendances_bloc/get_attendances_bloc.dart';
 import '../base/views/base_screen.dart';
 import '../courses/views/create_course_screen.dart';
@@ -35,6 +33,7 @@ GoRouter router(AuthenticationBloc authenticationBloc) {
       if (authenticationBloc.state.status == AuthenticationStatus.unknown) {
         return '/';
       }
+      return null;
     },
     routes: [
       ShellRoute(

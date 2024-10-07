@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:user_repository/user_repository.dart';
-
 class AttendanceEntity {
   final String id;
   final String lecturerId;

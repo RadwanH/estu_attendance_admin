@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../../blocs/authentication_bloc/authentication_bloc.dart';
-import '../blocs/current_attendance_cubit/current_attendance_cubit.dart';
 
 class OpenAttendanceScreen extends StatefulWidget {
   final Course? course;

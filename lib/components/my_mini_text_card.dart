@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MyMiniTextCard extends StatelessWidget {
@@ -9,60 +8,72 @@ class MyMiniTextCard extends StatelessWidget {
   final Color? iconColor;
   final Color? color;
 
-  const MyMiniTextCard(
-      {required this.title,
-      this.icon,
-      required this.value,
-      this.iconColor,
-      this.color,
-      super.key});
+  const MyMiniTextCard({
+    required this.title,
+    this.icon,
+    required this.value,
+    this.iconColor,
+    this.color,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: Container(
+    final bool isSmallScreen = MediaQuery.of(context).size.width < 600;
+
+    return Container(
       decoration: BoxDecoration(
-          color: color ?? Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.grey.shade400,
-                offset: const Offset(2, 2),
-                blurRadius: 5)
-          ]),
+        color: color ?? Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.9),
+            offset: const Offset(2, 4),
+            blurRadius: 6,
+            spreadRadius: 1,
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 8.0,
-          vertical: 14,
+          horizontal: 16,
+          vertical: 1,
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            icon != null
-                ? FaIcon(
-                    icon,
-                    color: iconColor,
-                    size: 20,
-                  )
-                : const SizedBox(),
-            const SizedBox(width: 8),
+            if (icon != null) ...[
+              FaIcon(
+                icon,
+                color: iconColor ?? Theme.of(context).colorScheme.primary,
+                size: isSmallScreen ? 16 : 20,
+              ),
+              const SizedBox(width: 6),
+            ],
             Text(
-              '$title :',
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
+              '$title:',
+              style: TextStyle(
+                fontSize: isSmallScreen ? 13 : 14,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             const SizedBox(width: 4),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
+            Flexible(
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: isSmallScreen ? 13 : 14,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             ),
           ],
         ),
       ),
-    ));
+    );
   }
 }

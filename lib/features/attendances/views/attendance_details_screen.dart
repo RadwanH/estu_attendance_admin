@@ -34,7 +34,7 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            context.go('/attendance', extra: widget.course);
+            context.push('/attendance', extra: widget.course);
           },
         ),
         actions: [
@@ -47,7 +47,15 @@ class _AttendanceDetailsScreenState extends State<AttendanceDetailsScreen> {
             },
           ),
         ],
-        title: const Center(child: Text('Attendance Details')),
+        centerTitle: true,
+        title: const Text(
+          'Attendance Details',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+            color: Colors.black,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

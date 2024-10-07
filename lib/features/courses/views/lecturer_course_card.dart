@@ -20,7 +20,7 @@ class LecturerCourseCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: () {
-          context.go('/course_details', extra: course);
+          context.push('/course_details', extra: course);
         },
         child: SizedBox(
           width: 200,

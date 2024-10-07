@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:math';
-
 import 'package:bloc/bloc.dart';
 import 'package:course_repository/course_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -34,9 +32,6 @@ class CurrentAttendanceCubit extends Cubit<CurrentAttendanceState> {
               remainingTime,
             ),
           );
-
-          
-
         } else {
           timer.cancel();
         }
